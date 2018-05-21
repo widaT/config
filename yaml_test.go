@@ -1,4 +1,4 @@
-package kasha
+package config
 
 import (
 	"testing"
@@ -6,7 +6,7 @@ import (
 	"fmt"
 )
 
-func TestYaml_Int(t * testing.T) {
+func TestYaml(t * testing.T) {
 	var (
 		yamlcontext = `
 "appname": test
@@ -19,7 +19,9 @@ func TestYaml_Int(t * testing.T) {
 "PATH": GOPATH
 "path1": GOPATH
 "path2": GOPATH
-"empty": ""
+"emptystrings":
+- aaa
+- dddd
 `
 
 		keyValue = map[string]interface{}{
@@ -34,10 +36,10 @@ func TestYaml_Int(t * testing.T) {
 			"path1":          "GOPATH",
 			"path2":           "GOPATH",
 			"error":           "",
-			"emptystrings":    []string{},
+			"emptystrings":    []string{"aaa","dddd"},
 		}
 	)
-	f, err := os.Create("testyaml.conf")
+	f, err := os.Create("testyaml.yaml")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -47,10 +49,13 @@ func TestYaml_Int(t * testing.T) {
 		t.Fatal(err)
 	}
 	f.Close()
-	defer os.Remove("testyaml.conf")
+	defer func() {
+		fmt.Println(os.Remove("testyaml.yaml"))
+	}()
+
 
 	var yaml Yaml
-	yamlconf, err := yaml.Parse( "testyaml.conf")
+	yamlconf, err := yaml.Parse( "testyaml.yaml")
 	if err != nil {
 		t.Fatal(err)
 	}

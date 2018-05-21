@@ -1,4 +1,4 @@
-package kasha
+package config
 
 import (
 	"strings"
@@ -16,6 +16,7 @@ func (c *Yaml) Parse(path string) (Configer,error) {
 	if err != nil {
 		return  nil,err
 	}
+	defer f.Close()
 	dec := yaml.NewDecoder(f)
 	if err := dec.Decode(&c.mymap);err != nil {
 		return nil,err
@@ -53,8 +54,16 @@ func (c *Yaml)String(key string) string{
 }
 
 func (c *Yaml)Strings(key string)[]string{
-	ret := c.String(key)
-	return strings.Split(ret,";")
+	ret,ok := c.read(key).([]interface{})
+	if !ok {
+		return nil
+	}
+	var strs []string
+	for _,v:= range ret {
+		vv,_:=v.(string)
+		strs = append(strs,vv)
+	}
+	return strs
 }
 
 func (c *Yaml)Int(key string)(int,error) {

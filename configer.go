@@ -1,4 +1,4 @@
-package kasha
+package config
 
 type Configer interface {
 	String(key string) string

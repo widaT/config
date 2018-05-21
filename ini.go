@@ -1,4 +1,4 @@
-package kasha
+package config
 
 import (
 	"bufio"
