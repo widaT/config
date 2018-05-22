@@ -50,22 +50,23 @@ func TestYaml(t * testing.T) {
 	}
 	f.Close()
 	defer func() {
-		fmt.Println(os.Remove("testyaml.yaml"))
+		os.Remove("testyaml.yaml")
 	}()
 
 
-	var yaml Yaml
-	yamlconf, err := yaml.Parse( "testyaml.yaml")
+	config ,err:= NewConfig("yaml","testyaml.yaml")
+	if err != nil {
+		t.Fatal(err)
+	}
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	if yamlconf.String("appname") != "test" {
+	if config.String("appname") != "test" {
 		t.Fatal("appname not equal to beeapi")
 	}
 
 	for k, v := range keyValue {
-
 		var (
 			value interface{}
 			err   error
@@ -73,17 +74,17 @@ func TestYaml(t * testing.T) {
 
 		switch v.(type) {
 		case int:
-			value, err = yamlconf.Int(k)
+			value, err = config.Int(k)
 		case int64:
-			value, err = yamlconf.Int64(k)
+			value, err = config.Int64(k)
 		case float64:
-			value, err = yamlconf.Float64(k)
+			value, err = config.Float64(k)
 		case bool:
-			value, err = yamlconf.Bool(k)
+			value, err = config.Bool(k)
 		case []string:
-			value = yamlconf.Strings(k)
+			value = config.Strings(k)
 		case string:
-			value = yamlconf.String(k)
+			value = config.String(k)
 		}
 		if err != nil {
 			t.Errorf("get key %q value fatal,%v err %s", k, v, err)

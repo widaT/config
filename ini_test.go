@@ -54,8 +54,7 @@ peers = one;two;three
 	}
 	f.Close()
 	defer os.Remove("testini.conf")
-	ini := Ini{}
-	iniconf, err := ini.Parse( "testini.conf")
+	config ,err:= NewConfig("ini","testini.conf")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -64,17 +63,17 @@ peers = one;two;three
 		var value interface{}
 		switch v.(type) {
 		case int:
-			value, err = iniconf.Int(k)
+			value, err = config.Int(k)
 		case int64:
-			value, err = iniconf.Int64(k)
+			value, err = config.Int64(k)
 		case float64:
-			value, err = iniconf.Float(k)
+			value, err = config.Float(k)
 		case bool:
-			value, err = iniconf.Bool(k)
+			value, err = config.Bool(k)
 		case []string:
-			value = iniconf.Strings(k)
+			value = config.Strings(k)
 		case string:
-			value = iniconf.String(k)
+			value = config.String(k)
 		}
 		if err != nil {
 			t.Fatalf("get key %q value fail,err %s", k, err)

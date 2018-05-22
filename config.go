@@ -1,5 +1,7 @@
 package config
 
+import "errors"
+
 type Configer interface {
 	String(key string) string
 	Strings(key string) []string
@@ -19,4 +21,17 @@ type Configer interface {
 
 type  ConfigProvider interface {
 	Parse(path string) (Configer,error)
+}
+
+func NewConfig(provider ,filePath string) (Configer,error) {
+	switch provider {
+	case "yaml":
+		y:=Yaml{}
+		return y.Parse(filePath)
+	case "ini":
+		i:= Ini{}
+		return i.Parse(filePath)
+	default:
+		return nil,errors.New("not support config type "+provider)
+	}
 }
