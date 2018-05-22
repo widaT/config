@@ -6,7 +6,7 @@ import (
 	"fmt"
 )
 
-func TestYaml(t * testing.T) {
+func TestYaml(t *testing.T) {
 	var (
 		yamlcontext = `
 "appname": test
